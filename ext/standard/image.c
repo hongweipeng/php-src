@@ -178,7 +178,7 @@ static struct gfxinfo *php_handle_swc(php_stream * stream)
 		return NULL;
 	}
 
-	b = ecalloc(1, len + 1);
+	b = ecalloc(len + 1, sizeof(unsigned char));
 
 	if (uncompress(b, &len, a, sizeof(a)) != Z_OK) {
 		/* failed to decompress the file, will try reading the rest of the file */

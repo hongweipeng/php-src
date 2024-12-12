@@ -51,7 +51,7 @@
    because the content is in *error_message now */
 #define SMTP_ERROR_RESPONSE(response)	{ \
 											if (response && error_message) { \
-												*error_message = ecalloc(1, sizeof(SMTP_ERROR_RESPONSE_SPEC) + strlen(response)); \
+												*error_message = ecalloc(sizeof(SMTP_ERROR_RESPONSE_SPEC) + strlen(response), sizeof(char)); \
 												snprintf(*error_message, sizeof(SMTP_ERROR_RESPONSE_SPEC) + strlen(response), SMTP_ERROR_RESPONSE_SPEC, response); \
 												efree(response); \
 											} \
@@ -267,7 +267,7 @@ PHPAPI int TSendMail(const char *host, int *error, char **error_message,
 			zend_string_release(headers_lc);
 		}
 		/* 128 is safe here, the specifier in snprintf isn't longer than that */
-		*error_message = ecalloc(1, HOST_NAME_LEN + 128);
+		*error_message = ecalloc(HOST_NAME_LEN + 128, sizeof(char));
 		snprintf(*error_message, HOST_NAME_LEN + 128,
 			"Failed to connect to mailserver at \"%s\" port " ZEND_ULONG_FMT ", verify your \"SMTP\" "
 			"and \"smtp_port\" setting in php.ini or use ini_set()",
@@ -595,7 +595,7 @@ static int SendText(char *RPath, const char *Subject, const char *mailTo, char *
 
 			/* Now that we've identified that we've a Bcc list,
 			   remove it from the current header. */
-			stripped_header = ecalloc(1, strlen(headers));
+			stripped_header = ecalloc(strlen(headers), sizeof(char));
 			/* headers = point to string start of header
 			   pos1    = pointer IN headers where the Bcc starts
 			   '4'     = Length of the characters 'bcc:'
@@ -730,7 +730,7 @@ static int PostHeader(char *RPath, const char *Subject, const char *mailTo, char
 		}
 	}
 
-	header_buffer = ecalloc(1, MAIL_BUFFER_SIZE);
+	header_buffer = ecalloc(MAIL_BUFFER_SIZE, sizeof(char));
 
 	if (!xheaders || !strstr(headers_lc, "date:")) {
 		time_t tNow = time(NULL);
